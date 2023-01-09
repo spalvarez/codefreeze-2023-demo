@@ -33,13 +33,13 @@ cilium status --wait
 cilium hubble enable --ui
 
 # Install Hubble
-export HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
+HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
 HUBBLE_ARCH=amd64
 
 if [ "$(uname)" = "Darwin" ]; then
     if [ "$(uname -m)" = "arm64" ]; then HUBBLE_ARCH=arm64; fi
     curl -L --fail --remote-name-all "https://github.com/cilium/hubble/releases/download/${HUBBLE_VERSION}/hubble-darwin-${HUBBLE_ARCH}.tar.gz{,.sha256sum}"
-    shasum -a 256 -c hubble-darwin-${HUBBLE_ARCH}.tar.gz.sha256sum
+    shasum -a 256 -c "hubble-darwin-${HUBBLE_ARCH}.tar.gz.sha256sum"
     sudo tar xzvfC hubble-darwin-${HUBBLE_ARCH}.tar.gz /usr/local/bin
     rm hubble-darwin-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
@@ -49,7 +49,4 @@ elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
     sudo tar xzvfC hubble-linux-${HUBBLE_ARCH}.tar.gz /usr/local/bin
     rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 fi
-
-# Validate Hubble access
-hubble status
 
