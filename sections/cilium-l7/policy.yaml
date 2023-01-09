@@ -1,0 +1,111 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: ""
+spec:
+  description: "Allow HTTP GET /public from env=prod to app=service"
+  endpointSelector:
+    matchLabels:
+      app: service
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        env: prod
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/public"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "fqdns-visibility"
+spec:
+  endpointSelector:
+    matchLabels:
+      any:org: alliance
+  egress:
+  - toEndpoints:
+    - matchLabels:
+       "k8s:io.kubernetes.pod.namespace": kube-system
+       "k8s:k8s-app": kube-dns
+    toPorts:
+      - ports:
+         - port: "53"
+           protocol: ANY
+        rules:
+          dns:
+            - matchName: "thoughtworks.com"
+            - matchPattern: "*.thoughtworks.com"
+            - matchPattern: "*.*.svc.cluster.local."
+  - toFQDNs:
+      - matchName: "thoughtworks.com"
+      - matchName: "sub.thoughtworks.com"
+    toPorts:
+      - ports:
+         - port: "80"
+           protocol: TCP
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-public-endpoints"
+spec:
+  description: "Allow HTTP GET /public from env=prod to app=service-one"
+  endpointSelector:
+    matchLabels:
+      app: service-one
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        env: prod
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/public"
+        - method: PUT
+          path: "/private"
+          headers:
+          - 'X-My-Header: true'
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: "mtls-peer-policy"
+  namespace: "demo"
+spec:
+  selector:
+    matchLabels:
+      app: xwing 
+  mtls:
+    mode: STRICT
+---
+apiVersion: 'cilium.io/v2'
+kind: CiliumNetworkPolicy
+metadata:
+  name: 'auth-rule-spiffe-xwing'
+spec:
+  endpointSelector:
+    - matchLabels:
+        - spiffe://mycluster/xwing: ''
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            - spiffe://mycluster/deathstar: ''
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: "default"
+spec:
+  mtls:
+    mode: STRICT
+EOF
