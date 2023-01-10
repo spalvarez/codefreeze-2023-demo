@@ -1,0 +1,21 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: prod-image-repo-is-docker
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces:
+      - "production"
+    excludedNamespaces:
+      - "kube-system"
+      - "kube-public"
+      - "gatekeeper-system"
+      - "default"
+      - "kube-node-lease"
+      - "local-path-storage"
+  parameters:
+    repos:
+      - "docker.io"

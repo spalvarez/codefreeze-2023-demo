@@ -1,0 +1,21 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: pods-must-have-class
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - "kube-system"
+      - "kube-public"
+      - "gatekeeper-system"
+      - "default"
+      - "kube-node-lease"
+      - "local-path-storage"
+  parameters:
+    message: "All pods must have a `class` label that describes the ship type"
+    labels:
+      - key: class
+        allowedRegex: "^[a-z]*$"

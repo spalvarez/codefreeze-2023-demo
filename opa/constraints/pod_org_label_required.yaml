@@ -1,0 +1,21 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: pods-must-declare-allegiance
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    excludedNamespaces:
+      - "kube-system"
+      - "kube-public"
+      - "gatekeeper-system"
+      - "default"
+      - "kube-node-lease"
+      - "local-path-storage"
+  parameters:
+    message: "All pods must have a `org` label that declares the ship allegiance to the alliance or empire"
+    labels:
+      - key: org
+        allowedRegex: "^alliance|empire$"

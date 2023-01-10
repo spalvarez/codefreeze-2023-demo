@@ -1,0 +1,20 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: all-must-have-env
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace", "Pod"]
+    excludedNamespaces:
+      - "kube-system"
+      - "kube-public"
+      - "gatekeeper-system"
+      - "kube-node-lease"
+      - "local-path-storage"
+  parameters:
+    message: "All namespaces and pods must have an `env` label that describes the sdlc environment as dev, qa or prod"
+    labels:
+      - key: env
+        allowedRegex: "^dev|qa|prod$"

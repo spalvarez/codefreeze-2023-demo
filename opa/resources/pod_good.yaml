@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: awing
+  namespace: production
+  labels:
+    app.kubernetes.io/name: awing
+    org: alliance
+    class: awing
+    env: prod
+spec:
+  containers:
+    - name: awing
+      image: docker.io/tgraf/netperf
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "30Mi"
