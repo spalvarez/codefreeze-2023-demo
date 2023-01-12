@@ -1,0 +1,5 @@
+
+curl -XPOST deathstar.starwars.svc.cluster.local/v1/request-landing
+curl -XGET deathstar.starwars.svc.cluster.local/v1
+curl -XGET thoughtworks.com
+curl -XPUT -H 'X-Has-Force: True' deathstar.starwars.svc.cluster.local/v1/exhaust-port
