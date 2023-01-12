@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 kubectl create namespace travel-agency                                                                                      
 kubectl create namespace travel-portal                                                                                      
 kubectl create namespace travel-control  
