@@ -1,2 +1,4 @@
 .DS_Store
 kind-config.yaml
+demo_application/star-wars-demo
+sections/cilium-l7/star-wars-demo
