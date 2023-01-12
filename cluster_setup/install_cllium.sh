@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-curl -LO https://raw.githubusercontent.com/cilium/cilium/1.12.5/Documentation/gettingstarted/kind-config.yaml
-kind create cluster --config=kind-config.yaml
-
 # Install cilium cli
 CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt)
 CLI_ARCH=amd64
